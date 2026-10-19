@@ -69,6 +69,9 @@ set relativenumber
 " Also show the absolute line number for the current line.
 set number
 
+" Highlight cursorline
+set cursorline
+
 " =============================================================================
 " History
 " =============================================================================
@@ -131,10 +134,14 @@ if filereadable(expand('~/.vim/autoload/plug.vim'))
 		" Plug 'author/plugin-name'
 		Plug 'junegunn/fzf'
 		Plug 'junegunn/fzf.vim'
-		Plug 'NLKNguyen/papercolor-theme'
+		Plug 'chriskempson/base16-vim'
+		Plug 'itchyny/lightline.vim'
 
 	call plug#end()
 endif
 
-set background=dark
-colorscheme PaperColor
+colorscheme base16-chalk
+let base16colorspace=256
+set termguicolors
+set laststatus=2
+set noshowmode
