@@ -143,3 +143,6 @@ endif
 colorscheme kanagawa
 set laststatus=2
 set noshowmode
+hi CursorLine gui=underline cterm=underline
+
+let g:lightline = { 'colorscheme': 'ayu_dark' }
