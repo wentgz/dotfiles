@@ -52,7 +52,7 @@ set scrolloff=10
 set showcmd
 
 " Show the current mode, e.g. -- INSERT -- or -- VISUAL --.
-set showmode
+" set showmode
 
 " Briefly jump to the matching bracket when inserting ), ], or }.
 set showmatch
@@ -145,4 +145,4 @@ set background=dark
 hi CursorLine cterm=underline
 set laststatus=2
 set noshowmode
-" let g:lightline = { 'colorscheme': 'ayu_mirage' }
+let g:lightline = { 'colorscheme': 'nord' }
