@@ -135,13 +135,14 @@ if filereadable(expand('~/.vim/autoload/plug.vim'))
 		Plug 'junegunn/fzf'
 		Plug 'junegunn/fzf.vim'
 		Plug 'itchyny/lightline.vim'
-		Plug 'menisadi/kanagawa.vim'
+		Plug 'noahfrederick/vim-hemisu'
 
 	call plug#end()
 endif
 
-colorscheme kanagawa
+colorscheme hemisu
+set background=dark
+hi CursorLine cterm=underline
 set laststatus=2
 set noshowmode
-hi CursorLine cterm=underline
-let g:lightline = { 'colorscheme': 'wombat' }
+" let g:lightline = { 'colorscheme': 'ayu_mirage' }
