@@ -131,7 +131,6 @@ nnoremap <leader>h :set hlsearch!<CR>
 if filereadable(expand('~/.vim/autoload/plug.vim'))
 	call plug#begin('~/.vim/plugged')
 		
-		" Plug 'author/plugin-name'
 		Plug 'junegunn/fzf'
 		Plug 'junegunn/fzf.vim'
 		Plug 'itchyny/lightline.vim'
@@ -143,6 +142,8 @@ endif
 colorscheme hemisu
 set background=dark
 hi CursorLine cterm=underline
+
+" Status bar
 set laststatus=2
 set noshowmode
-let g:lightline = { 'colorscheme': 'nord' }
+let g:lightline = { 'colorscheme': 'deus' }
