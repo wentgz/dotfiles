@@ -26,9 +26,13 @@ path() {
 
 # Find files/directories
 ff() {
-  find . -type f -iname "*${1:-}*"
+	local targ="$1"
+	local dest="$2:-$PWD"
+  find "$dest" -type f -iname "*$targ*"
 }
 
 fd() {
-  find . -type d -iname "*${1:-}*"
+	local targ="$1"
+	local dest="$2:-$PWD"
+  find "$dest" -type d -iname "*$targ*"
 }

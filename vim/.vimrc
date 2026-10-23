@@ -79,6 +79,8 @@ set cursorline
 " Keep up to 1000 commands and search patterns in history.
 set history=1000
 
+" Sync with system clipboard.
+set clipboard=unnamedplus
 
 " =============================================================================
 " File-type-specific settings
