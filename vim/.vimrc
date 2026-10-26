@@ -94,6 +94,8 @@ autocmd FileType yml  setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 set noexpandtab
 autocmd FileType make setlocal noexpandtab tabstop=2 shiftwidth=2
 
+" Use spaces and two-space indentation for shell scripts
+autocmd FileType sh setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
 " =============================================================================
 " Custom functions
@@ -125,6 +127,9 @@ nnoremap <C-n> :set invnumber invrelativenumber<CR>
 " <Leader>h: Toggle search highlighting.
 nnoremap <leader>h :set hlsearch!<CR>
 
+" Run the current Go file.
+command! GoRun write | execute '!go run ' . shellescape(expand('%:p'))
+
 " =============================================================================
 " Plugins (vim-plug)
 " =============================================================================
@@ -137,9 +142,28 @@ if filereadable(expand('~/.vim/autoload/plug.vim'))
 		Plug 'junegunn/fzf.vim'
 		Plug 'itchyny/lightline.vim'
 		Plug 'noahfrederick/vim-hemisu'
+		Plug 'dense-analysis/ale'
 
 	call plug#end()
 endif
+
+
+" Run ShellCheck while editing shell scripts
+let g:ale_linters = {
+      \ 'sh': ['shellcheck'],
+      \ }
+
+" Use shfmt when running :ALEFix
+let g:ale_fixers = {
+      \ 'sh': ['shfmt'],
+      \ }
+let g:ale_sh_shfmt_options = '-i 2'
+
+" Bash: save and run the current script with F5
+autocmd FileType sh nnoremap <buffer> <F5> :w<CR>:!bash %<CR>
+
+" Bash: format the current buffer with F7
+autocmd FileType sh nnoremap <buffer> <F7> :ALEFix<CR>
 
 colorscheme hemisu
 set background=dark

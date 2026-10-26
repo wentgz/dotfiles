@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 if [ -x /usr/bin/dircolors ]; then
-  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  if test -r ~/.dircolors; then
+    eval "$(dircolors -b ~/.dircolors)"
+  else
+    eval "$(dircolors -b)"
+  fi
 
   alias ls='ls --color=auto'
   alias grep='grep --color=auto'
@@ -27,12 +31,12 @@ path() {
 # Find files/directories
 ff() {
 	local targ="$1"
-	local dest="$2:-$PWD"
+	local dest="${2:-$PWD}"
   find "$dest" -type f -iname "*$targ*"
 }
 
 fd() {
 	local targ="$1"
-	local dest="$2:-$PWD"
+	local dest="${2:-$PWD}"
   find "$dest" -type d -iname "*$targ*"
 }
