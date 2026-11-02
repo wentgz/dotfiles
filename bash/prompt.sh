@@ -93,8 +93,8 @@ esac
 # Main prompt
 PS1=''
 
-PS1+="[${C_CYAN}"'\D{%H:%M:%S}'"${C_RESET}"'] '
-PS1+="${C_BRIGHT_GREEN}"'@\u'"${C_RESET}"' '
+PS1+="${C_BRIGHT_GREEN}"'\u'"${C_RESET}"' '
+PS1+='[exit:'"${C_BRIGHT_YELLOW}"'${exit_c}'"${C_RESET}"'] '
+PS1+="${C_BLUE}"'\W'"${C_RESET}"' '
 PS1+="${C_BRIGHT_YELLOW}"'$(\__git_branch)'"${C_RESET}"
-PS1+="${C_BLUE}"'\w'"${C_RESET}"
-PS1+="\n<${C_BRIGHT_YELLOW}"'${exit_c}'"${C_RESET}> "
+PS1+='\n$ '
