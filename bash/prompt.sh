@@ -6,56 +6,10 @@ if [[ -z ${debian_chroot:-} && -r /etc/debian_chroot ]]; then
 fi
 
 # Colors
-if [[ $TERM == xterm-color || $TERM == *-256color ]]; then
-	# Reset and styles
-	C_RESET='\[\e[0m\]'
-	C_BOLD='\[\e[1m\]'
-	C_DIM='\[\e[2m\]'
-	C_UNDERLINE='\[\e[4m\]'
-
-	# Normal colors
-	C_BLACK='\[\e[30m\]'
-	C_RED='\[\e[31m\]'
-	C_GREEN='\[\e[32m\]'
-	C_YELLOW='\[\e[33m\]'
-	C_BLUE='\[\e[34m\]'
-	C_MAGENTA='\[\e[35m\]'
-	C_CYAN='\[\e[36m\]'
-	C_WHITE='\[\e[37m\]'
-
-	# Bright colors
-	C_GRAY='\[\e[90m\]'
-	C_BRIGHT_RED='\[\e[91m\]'
-	C_BRIGHT_GREEN='\[\e[92m\]'
-	C_BRIGHT_YELLOW='\[\e[93m\]'
-	C_BRIGHT_BLUE='\[\e[94m\]'
-	C_BRIGHT_MAGENTA='\[\e[95m\]'
-	C_BRIGHT_CYAN='\[\e[96m\]'
-	C_BRIGHT_WHITE='\[\e[97m\]'
-else
-	C_RESET=''
-	C_BOLD=''
-	C_DIM=''
-	C_UNDERLINE=''
-
-	C_BLACK=''
-	C_RED=''
-	C_GREEN=''
-	C_YELLOW=''
-	C_BLUE=''
-	C_MAGENTA=''
-	C_CYAN=''
-	C_WHITE=''
-
-	C_GRAY=''
-	C_BRIGHT_RED=''
-	C_BRIGHT_GREEN=''
-	C_BRIGHT_YELLOW=''
-	C_BRIGHT_BLUE=''
-	C_BRIGHT_MAGENTA=''
-	C_BRIGHT_CYAN=''
-	C_BRIGHT_WHITE=''
-fi
+C_RESET='\[\e[0m\]'
+C_GREEN='\[\e[32m\]'
+C_YELLOW='\[\e[33m\]'
+C_BLUE='\[\e[34m\]'
 
 # Git branch
 __git_branch() {
@@ -93,8 +47,8 @@ esac
 # Main prompt
 PS1=''
 
-PS1+="${C_BRIGHT_GREEN}"'\u'"${C_RESET}"' '
-PS1+='[exit:'"${C_BRIGHT_YELLOW}"'${exit_c}'"${C_RESET}"'] '
+PS1+="${C_GREEN}"'\u'"${C_RESET}"' '
+PS1+='[exit:'"${C_YELLOW}"'${exit_c}'"${C_RESET}"'] '
 PS1+="${C_BLUE}"'\W'"${C_RESET}"' '
-PS1+="${C_BRIGHT_YELLOW}"'$(\__git_branch)'"${C_RESET}"
+PS1+="${C_YELLOW}"'$(\__git_branch)'"${C_RESET}"
 PS1+='\n$ '
