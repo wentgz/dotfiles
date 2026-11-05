@@ -18,6 +18,9 @@ set ignorecase
 " Example: /hello is case-insensitive, while /Hello is case-sensitive.
 set smartcase
 
+" Folding config
+set foldmethod=indent " can set to 'syntax' if want to fold by {} / []
+set foldlevel=99
 
 " =============================================================================
 " Indentation
