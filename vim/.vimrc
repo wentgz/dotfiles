@@ -144,7 +144,7 @@ if filereadable(expand('~/.vim/autoload/plug.vim'))
 		Plug 'junegunn/fzf'
 		Plug 'junegunn/fzf.vim'
 		Plug 'itchyny/lightline.vim'
-		Plug 'nanotech/jellybeans.vim'
+		Plug 'jonathanfilip/vim-lucius'
 
 	call plug#end()
 endif
@@ -167,7 +167,8 @@ autocmd FileType sh nnoremap <buffer> <F5> :w<CR>:!bash %<CR>
 " Bash: format the current buffer with F7
 autocmd FileType sh nnoremap <buffer> <F7> :ALEFix<CR>
 
-colorscheme jellybeans
+colorscheme lucius
+set background=dark
 hi CursorLine cterm=underline
 
 " Status bar
