@@ -237,15 +237,34 @@ configure_bashrc() {
     return 0
   fi
 
-  cat >> "$BASHRC" <<EOF
+  cat >> "$BASHRC" <<'EOF'
+# >>> dotfiles bash >>>
 
-$block_start
+pathfix() {
+  local rest="${PATH}:"
+  local entry
+  local -A seen=()
+  local -a paths=()
 
-for file in "\$HOME/.config/dotfiles/bash"/*.sh; do
-  [[ -r "\$file" ]] && source "\$file"
+  while [[ -n "$rest" ]]; do
+    entry="${rest%%:*}"
+    rest="${rest#*:}"
+
+    if [[ ! ${seen["x$entry"]+yes} ]]; then
+      seen["x$entry"]=1
+      paths+=("$entry")
+    fi
+  done
+
+  PATH=$(IFS=:; printf '%s' "${paths[*]}")
+  export PATH
+}
+
+for file in "$HOME/.config/dotfiles/bash"/*.sh; do
+  [[ -r "$file" ]] && source "$file"
 done
 
-$block_end
+# <<< dotfiles bash <<<
 
 EOF
 

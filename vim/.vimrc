@@ -145,7 +145,6 @@ if filereadable(expand('~/.vim/autoload/plug.vim'))
 		Plug 'junegunn/fzf.vim'
 		Plug 'itchyny/lightline.vim'
 		Plug 'nanotech/jellybeans.vim'
-		Plug 'dense-analysis/ale'
 
 	call plug#end()
 endif
