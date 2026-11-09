@@ -15,9 +15,9 @@ black = "#e5ede6"
 red = "#a8334c"
 green = "#769b51"
 yellow = "#944927"
-blue = "#286486"
+blue = "#1e4e69"
 magenta = "#88507d"
-cyan = "#3b8992"
+cyan = "#0d5f5b"
 white = "#202e18"
 
 [colors.bright]
