@@ -118,8 +118,17 @@ endfunction
 " Key mappings
 " =============================================================================
 
-" F6: Toggle syntax highlighting.
-nnoremap <F6> :call ToggleSyntax()<CR>
+" Toggle background setting
+function! ToggleBackground()
+  if &background ==# 'dark'
+    set background=light
+  else
+    set background=dark
+  endif
+endfunction
+
+" F6: Toggle background color.
+nnoremap <F6> :call ToggleBackground()<CR>
 
 " <Leader>g: Show detailed information about the current file and cursor position.
 nnoremap <leader>g 1<C-g>
@@ -168,7 +177,6 @@ autocmd FileType sh nnoremap <buffer> <F5> :w<CR>:!bash %<CR>
 autocmd FileType sh nnoremap <buffer> <F7> :ALEFix<CR>
 
 colorscheme lucius
-set background=dark
 hi CursorLine cterm=underline
 
 " Status bar
