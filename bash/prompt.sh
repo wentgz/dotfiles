@@ -5,11 +5,30 @@ if [[ -z ${debian_chroot:-} && -r /etc/debian_chroot ]]; then
   IFS= read -r debian_chroot < /etc/debian_chroot
 fi
 
-# Colors
+# Reset and styles
 C_RESET='\[\e[0m\]'
+C_BOLD='\[\e[1m\]'
+C_DIM='\[\e[2m\]'
+C_UNDERLINE='\[\e[4m\]'
+
+# Normal foreground colors
+C_BLACK='\[\e[30m\]'
+C_RED='\[\e[31m\]'
 C_GREEN='\[\e[32m\]'
 C_YELLOW='\[\e[33m\]'
 C_BLUE='\[\e[34m\]'
+C_CYAN='\[\e[36m\]'
+C_WHITE='\[\e[37m\]'
+
+# Bright foreground colors
+C_BRIGHT_BLACK='\[\e[90m\]'
+C_BRIGHT_RED='\[\e[91m\]'
+C_BRIGHT_GREEN='\[\e[92m\]'
+C_BRIGHT_YELLOW='\[\e[93m\]'
+C_BRIGHT_BLUE='\[\e[94m\]'
+C_BRIGHT_MAGENTA='\[\e[95m\]'
+C_BRIGHT_CYAN='\[\e[96m\]'
+C_BRIGHT_WHITE='\[\e[97m\]'
 
 # Git branch
 __git_branch() {
@@ -47,8 +66,8 @@ esac
 # Main prompt
 PS1=''
 
-PS1+="${C_GREEN}"'\u'"${C_RESET}"' '
+PS1+="${C_BLUE}"'\u'"${C_RESET}"' '
 PS1+='[exit:'"${C_YELLOW}"'${exit_c}'"${C_RESET}"'] '
-PS1+="${C_BLUE}"'\W'"${C_RESET}"' '
+PS1+="${C_CYAN}"'\W'"${C_RESET}"' '
 PS1+="${C_YELLOW}"'$(\__git_branch)'"${C_RESET}"
 PS1+='\n$ '
