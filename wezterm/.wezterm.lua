@@ -48,8 +48,8 @@ config.launch_menu = {
         args = { 'powershell' }
     },
     {
-				label = 'Command Prompt',
-				args = { 'cmd' },
+		label = 'Command Prompt',
+		args = { 'cmd' },
     },
   }
 
