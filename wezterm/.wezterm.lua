@@ -9,17 +9,46 @@ local act = wezterm.action
 config.initial_cols = 120 
 config.initial_rows = 28
 
+config.line_height = 1.2
+
 -- Fonts
 config.font_size = 14
 config.font = wezterm.font('Consolas')
 
--- Dark themes
-config.color_scheme = 'Kimber (base16)'
--- config.color_scheme = 'Teerb'
+local selected_scheme = 'zenbones'
 
--- Light themes
--- config.color_scheme = 'Mar (Gogh)'
-config.color_scheme = 'Lunaria Light (Gogh)'
+local light_schemes = {
+  ['Mar (Gogh)'] = true,
+  ['iceberg-light'] = true,
+  ['Lunaria Light (Gogh)'] = true,
+  ['Harmonic16 Light (base16)'] = true,
+  ['zenbones'] = true,
+}
+
+local dark_schemes = {
+  ['Kimber (base16)'] = true,
+  ['Teerb'] = true,
+}
+
+local schemes = wezterm.color.get_builtin_schemes()
+local selected = schemes[selected_scheme]
+
+if not selected then
+  error('Cannot find colorscheme: ' .. selected_scheme)
+end
+
+if light_schemes[selected_scheme] then
+  selected.ansi[3] = '#34aa34'
+  selected.brights[3] = '#17b617'
+elseif dark_schemes[selected_scheme] then
+    -- custom dark scheme color
+end
+
+local custom_name = selected_scheme .. '-custom'
+config.color_schemes = {
+  [custom_name] = selected,
+}
+config.color_scheme = custom_name
 
 config.front_end = "WebGpu"
 
