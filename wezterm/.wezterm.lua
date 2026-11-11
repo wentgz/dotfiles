@@ -5,15 +5,23 @@ local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 local act = wezterm.action
 
+-- Initial geometry for new windows:
 config.initial_cols = 120 
 config.initial_rows = 28
 
+-- Fonts
 config.font_size = 14
-config.font = wezterm.font('Jetbrains Mono')
+config.font = wezterm.font('Consolas')
 
-config.color_scheme = 'Teerb'
--- config.color_scheme = 'seoulbones_light'
-config.front_end = "WebGpu"   -- or "WebGpu"
+-- Dark themes
+config.color_scheme = 'Kimber (base16)'
+-- config.color_scheme = 'Teerb'
+
+-- Light themes
+-- config.color_scheme = 'Mar (Gogh)'
+config.color_scheme = 'Lunaria Light (Gogh)'
+
+config.front_end = "WebGpu"
 
 config.mouse_bindings = {
     {
@@ -48,9 +56,10 @@ config.launch_menu = {
         args = { 'powershell' }
     },
     {
-		label = 'Command Prompt',
-		args = { 'cmd' },
+        label = 'Command Prompt',
+        args = { 'cmd' }
     },
   }
 
+-- Return the configuration to wezterm:
 return config
