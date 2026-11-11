@@ -12,7 +12,7 @@ config.initial_rows = 28
 config.line_height = 1.2
 
 -- Fonts
-config.font_size = 14
+config.font_size = 12
 config.font = wezterm.font('Consolas')
 
 local selected_scheme = 'zenbones'
