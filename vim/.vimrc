@@ -136,8 +136,8 @@ nnoremap <leader>g 1<C-g>
 " Ctrl-N: Toggle both absolute and relative line numbers.
 nnoremap <C-n> :set invnumber invrelativenumber<CR>
 
-" <Leader>h: Toggle search highlighting.
-nnoremap <leader>h :set hlsearch!<CR>
+" <Esc><Esc>: Turn off current highlight search.
+nnoremap <Esc><Esc> :nohlsearch<CR>
 
 " Run the current Go file.
 command! GoRun write | execute '!go run ' . shellescape(expand('%:p'))
