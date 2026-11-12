@@ -5,11 +5,14 @@ local config = wezterm.config_builder()
 -- Window
 config.initial_cols = 120
 config.initial_rows = 28
-config.line_height = 1.2
 
 -- Fonts
 config.font_size = 14
-config.font = wezterm.font('Cascadia Code')
+config.font = wezterm.font('JetBrains Mono', {
+  weight = 'Regular',
+  stretch = 'Normal',
+  style = 'Normal',
+})
 
 -- Color scheme
 local selected_scheme = 'zenbones'
