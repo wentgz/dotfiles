@@ -8,11 +8,20 @@ config.initial_rows = 28
 
 -- Fonts
 config.font_size = 14
-config.font = wezterm.font('JetBrains Mono', {
-  weight = 'Regular',
-  stretch = 'Normal',
-  style = 'Normal',
-})
+config.font = wezterm.font('Monaspace Argon')
+config.harfbuzz_features = {
+	"calt",
+	"liga",
+	"clig",
+	"ss01",
+	"ss02",
+	"ss03",
+	"ss04",
+	"ss05",
+	"ss06",
+	"ss07",
+	"ss08",
+}
 
 -- Color scheme
 local selected_scheme = 'zenbones'
@@ -46,6 +55,7 @@ assert(selected, 'Cannot find colorscheme: ' .. selected_scheme)
 if light_schemes[selected_scheme] then
   selected.ansi[3] = '#51af4e'
   selected.ansi[7] = '#0b8b99'
+  selected.ansi[8] = '#000000'
   selected.brights[5] = '#2177a5'
 elseif dark_schemes[selected_scheme] then
   -- Custom dark-scheme colors go here.
