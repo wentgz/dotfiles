@@ -94,41 +94,89 @@ autocmd FileType yaml setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 autocmd FileType yml  setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
 " Makefiles require actual tab characters for recipe commands.
-set noexpandtab
 autocmd FileType make setlocal noexpandtab tabstop=2 shiftwidth=2
 
 " Use spaces and two-space indentation for shell scripts
 autocmd FileType sh setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
+" C/C++: use spaces and two-space indentation.
+" F5: build optimized binary and run it.
+" F6: build debug binary and launch GDB.
+augroup c_cpp_settings
+  autocmd!
+  autocmd FileType c,cpp setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+  autocmd FileType c,cpp nnoremap <buffer> <F5> :<C-u>call CBuildAndLaunch(0)<CR>
+  autocmd FileType c,cpp nnoremap <buffer> <F6> :<C-u>call CBuildAndLaunch(1)<CR>
+augroup END
+
 " =============================================================================
 " Custom functions
 " =============================================================================
-
-" Toggle syntax highlighting on or off.
-function! ToggleSyntax()
-  if exists("g:syntax_on")
-    syntax off
-  else
-    syntax enable
+" Build and run the current C/C++ source, or launch it in GDB.
+function! CBuildAndLaunch(debug)
+  if !has('terminal')
+    echoerr 'Your Vim was not built with +terminal.'
+    return
   endif
-endfunction
 
+  if empty(expand('%:p'))
+    echoerr 'Save file before compile!'
+    return
+  endif
+
+  if &modified
+    write
+  endif
+
+  let l:ext = tolower(expand('%:e'))
+  let l:targets = {
+        \ 'c':   {'compiler': 'gcc', 'standard': '-std=c17'},
+        \ 'cpp': {'compiler': 'g++', 'standard': '-std=c++17'},
+        \ 'cc':  {'compiler': 'g++', 'standard': '-std=c++17'},
+        \ 'cxx': {'compiler': 'g++', 'standard': '-std=c++17'},
+        \ }
+
+  let l:target = get(l:targets, l:ext, {})
+
+  if empty(l:target)
+    echoerr 'Only support .c, .cpp, .cc hoặc .cxx.'
+    return
+  endif
+
+  let l:src = expand('%:p')
+  let l:dir = expand('%:p:h')
+  let l:exe = expand('%:p:r') . '.out'
+
+  if a:debug
+    let l:flags = '-Wall -Wextra -O0 -g'
+    let l:launch_cmd = 'gdb --args ' . shellescape(l:exe)
+  else
+    let l:flags = '-Wall -Wextra -O2'
+    let l:launch_cmd = shellescape(l:exe)
+  endif
+
+  let l:compile_cmd = printf(
+        \ '%s %s %s %s -o %s',
+        \ l:target.compiler,
+        \ l:target.standard,
+        \ l:flags,
+        \ shellescape(l:src),
+        \ shellescape(l:exe))
+
+  let l:cmd = printf(
+        \ 'cd %s && %s && %s',
+        \ shellescape(l:dir),
+        \ l:compile_cmd,
+        \ l:launch_cmd)
+
+  botright 12new
+  call term_start(['bash', '-lc', l:cmd], {'curwin': 1})
+  startinsert
+endfunction
 
 " =============================================================================
 " Key mappings
 " =============================================================================
-
-" Toggle background setting
-function! ToggleBackground()
-  if &background ==# 'dark'
-    set background=light
-  else
-    set background=dark
-  endif
-endfunction
-
-" F6: Toggle background color.
-nnoremap <F6> :call ToggleBackground()<CR>
 
 " <Leader>g: Show detailed information about the current file and cursor position.
 nnoremap <leader>g 1<C-g>
@@ -180,6 +228,7 @@ autocmd FileType sh nnoremap <buffer> <F5> :w<CR>:!bash %<CR>
 autocmd FileType sh nnoremap <buffer> <F7> :ALEFix<CR>
 
 colorscheme lucius
+set background=dark
 hi CursorLine cterm=underline
 
 " Status bar
