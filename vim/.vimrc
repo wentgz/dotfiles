@@ -139,6 +139,9 @@ nnoremap <C-n> :set invnumber invrelativenumber<CR>
 " <Esc><Esc>: Turn off current highlight search.
 nnoremap <Esc><Esc> :nohlsearch<CR>
 
+" Remove all leading whitespace from the selected lines.
+xnoremap <leader>0 :s/^\s*//<CR>
+
 " Run the current Go file.
 command! GoRun write | execute '!go run ' . shellescape(expand('%:p'))
 
