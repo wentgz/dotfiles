@@ -112,6 +112,7 @@ augroup END
 " =============================================================================
 " Custom functions
 " =============================================================================
+
 " Build and run the current C/C++ source, or launch it in GDB.
 function! CBuildAndLaunch(debug)
   if !has('terminal')
@@ -192,6 +193,9 @@ xnoremap <leader>0 :s/^\s*//<CR>
 
 " Run the current Go file.
 command! GoRun write | execute '!go run ' . shellescape(expand('%:p'))
+
+" <Leader>t: Open a terminal.
+nnoremap <leader>t :terminal<CR>
 
 " =============================================================================
 " Plugins (vim-plug)
