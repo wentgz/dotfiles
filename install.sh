@@ -260,6 +260,8 @@ pathfix() {
   export PATH
 }
 
+pathfix
+
 for file in "$HOME/.config/dotfiles/bash"/*.sh; do
   [[ -r "$file" ]] && source "$file"
 done
