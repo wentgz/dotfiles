@@ -7,7 +7,7 @@ config.initial_cols = 120
 config.initial_rows = 28
 
 -- Fonts
-config.font_size = 14
+config.font_size = 13
 config.font = wezterm.font('Monaspace Argon')
 config.harfbuzz_features = {
 	"calt",
@@ -24,7 +24,7 @@ config.harfbuzz_features = {
 }
 
 -- Color scheme
-local selected_scheme = 'zenbones'
+local selected_scheme = 'Teerb'
 
 local light_schemes = {
   ['Mar (Gogh)'] = true,
@@ -66,7 +66,7 @@ config.color_schemes = { [custom_scheme] = selected }
 config.color_scheme = custom_scheme
 
 -- Renderer
-config.front_end = 'WebGpu'
+config.front_end = 'WebGpu' -- if it show error related to libEGL -> change to this instead 'Software'
 
 -- Mouse
 config.mouse_bindings = {
@@ -101,6 +101,8 @@ config.launch_menu = {
   { label = 'PowerShell', args = { 'powershell' } },
   { label = 'Command Prompt', args = { 'cmd' } },
   { label = 'WSL Ubuntu 22.04', args = { 'wsl', '-d', 'ubuntu-22.04' } },
+	{ label = 'Bash', args = { '/bin/bash' } },
+	{ label = 'SSH', args = { 'ssh', 'dummy-remote' } },
 }
 
 return config
