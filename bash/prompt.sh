@@ -68,6 +68,6 @@ PS1=''
 
 PS1+="${C_BRIGHT_GREEN}"'\u'"${C_RESET}"' '
 PS1+='[exit:'"${C_RED}"'${exit_c}'"${C_RESET}"'] '
-PS1+="${C_BRIGHT_BLUE}"'\W'"${C_RESET}"' '
+PS1+="${C_BRIGHT_BLUE}"'\w'"${C_RESET}"' '
 PS1+="${C_YELLOW}"'$(\__git_branch)'"${C_RESET}"
 PS1+='\n$ '
