@@ -24,7 +24,7 @@ config.harfbuzz_features = {
 }
 
 -- Color scheme
-local selected_scheme = 'Teerb'
+local selected_scheme = 'Zenburn (Gogh)'
 
 local light_schemes = {
   ['Mar (Gogh)'] = true,
@@ -37,6 +37,7 @@ local light_schemes = {
 local dark_schemes = {
   ['Kimber (base16)'] = true,
   ['Teerb'] = true,
+  ['Zenburn (Gogh)'] = true,
 }
 
 local selected = wezterm.color.get_builtin_schemes()[selected_scheme]
@@ -58,6 +59,7 @@ if light_schemes[selected_scheme] then
   selected.ansi[8] = '#000000'
   selected.brights[5] = '#2177a5'
 elseif dark_schemes[selected_scheme] then
+  selected.ansi[2] = '#f7937a'
   selected.ansi[5] = '#3f4199'
 end
 
