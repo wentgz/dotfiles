@@ -58,7 +58,7 @@ if light_schemes[selected_scheme] then
   selected.ansi[8] = '#000000'
   selected.brights[5] = '#2177a5'
 elseif dark_schemes[selected_scheme] then
-  -- Custom dark-scheme colors go here.
+  selected.ansi[5] = '#3f4199'
 end
 
 local custom_scheme = selected_scheme .. '-custom'
