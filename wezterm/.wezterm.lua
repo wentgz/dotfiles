@@ -27,10 +27,7 @@ config.harfbuzz_features = {
 local selected_scheme = 'Zenburn (Gogh)'
 
 local light_schemes = {
-  ['Mar (Gogh)'] = true,
   ['iceberg-light'] = true,
-  ['Lunaria Light (Gogh)'] = true,
-  ['Harmonic16 Light (base16)'] = true,
   ['zenbones'] = true,
 }
 
@@ -55,9 +52,8 @@ assert(selected, 'Cannot find colorscheme: ' .. selected_scheme)
 
 if light_schemes[selected_scheme] then
   selected.ansi[3] = '#51af4e'
-  selected.ansi[7] = '#0b8b99'
-  selected.ansi[8] = '#000000'
-  selected.brights[5] = '#2177a5'
+  selected.ansi[5] = '#12405a'
+  selected.brights[5] = '#197eb4'
 elseif dark_schemes[selected_scheme] then
   selected.ansi[2] = '#f7937a'
   selected.ansi[5] = '#3f4199'
