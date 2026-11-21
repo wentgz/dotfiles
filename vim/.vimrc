@@ -1,7 +1,3 @@
-" =============================================================================
-" Search
-" =============================================================================
-
 " Show search matches while typing the search pattern.
 set incsearch
 
@@ -22,10 +18,6 @@ set smartcase
 set foldmethod=indent " can set to 'syntax' if want to fold by {} / []
 set foldlevel=99
 
-" =============================================================================
-" Indentation
-" =============================================================================
-
 " Number of spaces used for each indentation level.
 set shiftwidth=2
 
@@ -35,18 +27,8 @@ set tabstop=2
 " Insert spaces instead of actual tab characters.
 set expandtab
 
-
-" =============================================================================
-" Files
-" =============================================================================
-
 " Do not create backup files before overwriting a file.
 set nobackup
-
-
-" =============================================================================
-" Editor UI
-" =============================================================================
 
 " Keep at least 10 lines visible above and below the cursor when possible.
 set scrolloff=10
@@ -75,19 +57,11 @@ set number
 " Highlight cursorline
 set cursorline
 
-" =============================================================================
-" History
-" =============================================================================
-
 " Keep up to 1000 commands and search patterns in history.
 set history=1000
 
 " Sync with system clipboard.
 set clipboard=unnamedplus
-
-" =============================================================================
-" File-type-specific settings
-" =============================================================================
 
 " YAML files use 2-space indentation and never use hard tabs.
 autocmd FileType yaml setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
@@ -99,85 +73,80 @@ autocmd FileType make setlocal noexpandtab tabstop=2 shiftwidth=2
 " Use spaces and two-space indentation for shell scripts
 autocmd FileType sh setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
-" C/C++: use spaces and two-space indentation.
-" F5: build optimized binary and run it.
-" F6: build debug binary and launch GDB.
-augroup c_cpp_settings
+" C/C++: save, build, and run with F5 in the current terminal
+augroup run_code_with_f5
   autocmd!
   autocmd FileType c,cpp setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
-  autocmd FileType c,cpp nnoremap <buffer> <F5> :<C-u>call CBuildAndLaunch(0)<CR>
-  autocmd FileType c,cpp nnoremap <buffer> <F6> :<C-u>call CBuildAndLaunch(1)<CR>
+  autocmd FileType c,cpp nnoremap <buffer> <F5> :<C-u>call CBuildAndRun()<CR>
+  autocmd FileType go nnoremap <buffer> <F5> :<C-u>call GoBuildAndRun()<CR>
 augroup END
 
-" =============================================================================
-" Custom functions
-" =============================================================================
-
-" Build and run the current C/C++ source, or launch it in GDB.
-function! CBuildAndLaunch(debug)
-  if !has('terminal')
-    echoerr 'Your Vim was not built with +terminal.'
-    return
-  endif
-
+function! CBuildAndRun()
   if empty(expand('%:p'))
-    echoerr 'Save file before compile!'
+    echoerr 'Save the file before running it.'
     return
   endif
 
-  if &modified
-    write
-  endif
+  update
 
   let l:ext = tolower(expand('%:e'))
-  let l:targets = {
-        \ 'c':   {'compiler': 'gcc', 'standard': '-std=c17'},
-        \ 'cpp': {'compiler': 'g++', 'standard': '-std=c++17'},
-        \ 'cc':  {'compiler': 'g++', 'standard': '-std=c++17'},
-        \ 'cxx': {'compiler': 'g++', 'standard': '-std=c++17'},
-        \ }
-
-  let l:target = get(l:targets, l:ext, {})
-
-  if empty(l:target)
-    echoerr 'Only support .c, .cpp, .cc hoặc .cxx.'
+  if l:ext ==# 'c'
+    let l:compiler = 'gcc'
+    let l:standard = '-std=c17'
+  elseif index(['cpp', 'cc', 'cxx'], l:ext) >= 0
+    let l:compiler = 'g++'
+    let l:standard = '-std=c++17'
+  else
+    echoerr 'Supported extensions: .c, .cpp, .cc, .cxx'
     return
   endif
 
   let l:src = expand('%:p')
   let l:dir = expand('%:p:h')
-  let l:exe = expand('%:p:r') . '.out'
+  let l:outdir = l:dir . '/out'
+  let l:exe = l:outdir . '/' . expand('%:t:r') . '.out'
 
-  if a:debug
-    let l:flags = '-Wall -Wextra -O0 -g'
-    let l:launch_cmd = 'gdb --args ' . shellescape(l:exe)
-  else
-    let l:flags = '-Wall -Wextra -O2'
-    let l:launch_cmd = shellescape(l:exe)
-  endif
+  call mkdir(l:outdir, 'p')
 
-  let l:compile_cmd = printf(
-        \ '%s %s %s %s -o %s',
-        \ l:target.compiler,
-        \ l:target.standard,
-        \ l:flags,
-        \ shellescape(l:src),
-        \ shellescape(l:exe))
+  let l:cmd = 'cd ' . shellescape(l:dir)
+        \ . ' && printf "\n========== OUTPUT ==========\n"'
+        \ . ' && ' . l:compiler . ' ' . l:standard
+        \ . ' -Wall -Wextra -O2 -o ' . shellescape(l:exe)
+        \ . ' ' . shellescape(l:src)
+        \ . ' && ' . shellescape(l:exe)
 
-  let l:cmd = printf(
-        \ 'cd %s && %s && %s',
-        \ shellescape(l:dir),
-        \ l:compile_cmd,
-        \ l:launch_cmd)
-
-  botright 12new
-  call term_start(['bash', '-lc', l:cmd], {'curwin': 1})
-  startinsert
+  execute '!' . l:cmd
 endfunction
 
-" =============================================================================
-" Key mappings
-" =============================================================================
+function! GoBuildAndRun()
+  if empty(expand('%:p'))
+    echoerr 'Save the file before running it.'
+    return
+  endif
+
+  update
+
+  let l:src = expand('%:p')
+  let l:dir = expand('%:p:h')
+  let l:outdir = l:dir . '/out'
+
+  call mkdir(l:outdir, 'p')
+
+  if !empty(findfile('go.mod', l:dir . ';'))
+    let l:target = '.'
+    let l:name = fnamemodify(l:dir, ':t')
+  else
+    let l:target = shellescape(l:src)
+    let l:name = expand('%:t:r')
+  endif
+
+  let l:exe = l:outdir . '/' . l:name . '.out'
+  let l:cmd = 'cd ' . shellescape(l:dir)
+        \ . ' && go build -o ' . shellescape(l:exe) . ' ' . l:target
+        \ . ' && ' . shellescape(l:exe)
+
+  execute '!' . l:cmd
+endfunction
 
 " <Leader>g: Show detailed information about the current file and cursor position.
 nnoremap <leader>g 1<C-g>
@@ -196,10 +165,6 @@ command! GoRun write | execute '!go run ' . shellescape(expand('%:p'))
 
 " <Leader>t: Open a terminal.
 nnoremap <leader>t :terminal<CR>
-
-" =============================================================================
-" Plugins (vim-plug)
-" =============================================================================
 
 " Plugins installed with vim-plug are stored in ~/.vim/plugged.
 if filereadable(expand('~/.vim/autoload/plug.vim'))
