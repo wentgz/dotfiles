@@ -259,34 +259,12 @@ if filereadable(expand('~/.vim/autoload/plug.vim'))
   call plug#end()
 endif
 
-
-" =============================================================================
-" ALE
-" =============================================================================
-
-" Run ShellCheck on shell scripts.
-let g:ale_linters = {
-      \ 'sh': ['shellcheck'],
-      \ }
-
-" Use shfmt when running :ALEFix.
-let g:ale_fixers = {
-      \ 'sh': ['shfmt'],
-      \ }
-
-" Indent shell scripts with two spaces when formatting.
-let g:ale_sh_shfmt_options = '-i 2'
-
-
 " =============================================================================
 " Colors and status line
 " =============================================================================
 
 colorscheme lucius
 set background=dark
-
-" Underline the current cursor line.
-highlight CursorLine cterm=underline
 
 " Always show the status line.
 set laststatus=2
