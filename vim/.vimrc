@@ -1,87 +1,126 @@
-" Show search matches while typing the search pattern.
+" =============================================================================
+" Search
+" =============================================================================
+
+" Show matches while typing a search pattern.
 set incsearch
 
 " Highlight all matches of the current search pattern.
 set hlsearch
 
-" Show the number of search matches, e.g. [1/5].
+" Show the number of search matches, such as [1/5].
 set shortmess-=S
 
-" Ignore case when searching by default.
+" Ignore case unless the search pattern contains an uppercase letter.
 set ignorecase
-
-" Make searches case-sensitive if the pattern contains uppercase letters.
-" Example: /hello is case-insensitive, while /Hello is case-sensitive.
 set smartcase
 
-" Folding config
-set foldmethod=indent " can set to 'syntax' if want to fold by {} / []
-set foldlevel=99
 
-" Number of spaces used for each indentation level.
+" =============================================================================
+" Indentation
+" =============================================================================
+
+" Use two spaces for each indentation level.
 set shiftwidth=2
 
-" Display a tab character as 2 columns wide.
+" Display tabs as two columns wide.
 set tabstop=2
 
-" Insert spaces instead of actual tab characters.
+" Insert spaces instead of tab characters.
 set expandtab
+
+
+" =============================================================================
+" Folding
+" =============================================================================
+
+" Fold code based on indentation.
+" Change this to "syntax" to fold according to language syntax.
+set foldmethod=indent
+set foldlevel=99
+
+
+" =============================================================================
+" Editor behavior
+" =============================================================================
 
 " Do not create backup files before overwriting a file.
 set nobackup
 
-" Keep at least 10 lines visible above and below the cursor when possible.
+" Keep at least 10 screen lines visible above and below the cursor.
 set scrolloff=10
 
-" Show partially typed commands in the bottom-right corner.
+" Show partially typed commands in the command area.
 set showcmd
 
-" Show the current mode, e.g. -- INSERT -- or -- VISUAL --.
-" set showmode
-
-" Briefly jump to the matching bracket when inserting ), ], or }.
+" Briefly highlight the matching bracket.
 set showmatch
 
-" Show an enhanced command-line completion menu.
+" Enable the command-line completion menu.
 set wildmenu
 
-" Complete commands to the longest common match and show all candidates.
+" Complete to the longest match and show the available choices.
 set wildmode=list:longest
-
-" Show relative line numbers for easier movement with commands like 5j or 8k.
-set relativenumber
-
-" Also show the absolute line number for the current line.
-set number
-
-" Highlight cursorline
-set cursorline
 
 " Keep up to 1000 commands and search patterns in history.
 set history=1000
 
-" Sync with system clipboard.
+" Use the system clipboard for Vim's unnamed register.
 set clipboard=unnamedplus
 
-" YAML files use 2-space indentation and never use hard tabs.
-autocmd FileType yaml setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
-autocmd FileType yml  setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+" Enable mouse support in all modes.
+set mouse=a
 
-" Makefiles require actual tab characters for recipe commands.
-autocmd FileType make setlocal noexpandtab tabstop=2 shiftwidth=2
 
-" Use spaces and two-space indentation for shell scripts
-autocmd FileType sh setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+" =============================================================================
+" Line numbers and cursor
+" =============================================================================
 
-" C/C++: save, build, and run with F5 in the current terminal
-augroup run_code_with_f5
+" Show relative line numbers and the absolute number on the current line.
+set number
+set relativenumber
+
+" Highlight the line containing the cursor.
+set cursorline
+
+
+" =============================================================================
+" Terminal mouse support
+" =============================================================================
+
+" Use SGR mouse reporting when running inside screen or tmux.
+if !has('gui_running') && &term =~# '^\%(screen\|tmux\)'
+  set ttymouse=sgr
+endif
+
+
+" =============================================================================
+" File type settings
+" =============================================================================
+
+augroup file_type_settings
   autocmd!
+
+  " Use two spaces for YAML files.
+  autocmd FileType yaml,yml setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+  " Makefiles require tab characters for recipe commands.
+  autocmd FileType make setlocal noexpandtab tabstop=2 shiftwidth=2
+
+  " Use two spaces for shell scripts.
+  autocmd FileType sh setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+  " Use two spaces for C and C++ files.
   autocmd FileType c,cpp setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
-  autocmd FileType c,cpp nnoremap <buffer> <F5> :<C-u>call CBuildAndRun()<CR>
-  autocmd FileType go nnoremap <buffer> <F5> :<C-u>call GoBuildAndRun()<CR>
 augroup END
 
+
+" =============================================================================
+" Build and run
+" =============================================================================
+
 function! CBuildAndRun()
+  " Save the file before building it.
   if empty(expand('%:p'))
     echoerr 'Save the file before running it.'
     return
@@ -89,6 +128,7 @@ function! CBuildAndRun()
 
   update
 
+  " Select the compiler and language standard from the file extension.
   let l:ext = tolower(expand('%:e'))
   if l:ext ==# 'c'
     let l:compiler = 'gcc'
@@ -106,8 +146,10 @@ function! CBuildAndRun()
   let l:outdir = l:dir . '/out'
   let l:exe = l:outdir . '/' . expand('%:t:r') . '.out'
 
+  " Create the output directory if it does not exist.
   call mkdir(l:outdir, 'p')
 
+  " Build and run the program from the source file's directory.
   let l:cmd = 'cd ' . shellescape(l:dir)
         \ . ' && printf "\n========== OUTPUT ==========\n"'
         \ . ' && ' . l:compiler . ' ' . l:standard
@@ -119,6 +161,7 @@ function! CBuildAndRun()
 endfunction
 
 function! GoBuildAndRun()
+  " Save the file before building it.
   if empty(expand('%:p'))
     echoerr 'Save the file before running it.'
     return
@@ -130,8 +173,10 @@ function! GoBuildAndRun()
   let l:dir = expand('%:p:h')
   let l:outdir = l:dir . '/out'
 
+  " Create the output directory if it does not exist.
   call mkdir(l:outdir, 'p')
 
+  " Build the Go module when go.mod exists; otherwise build this file.
   if !empty(findfile('go.mod', l:dir . ';'))
     let l:target = '.'
     let l:name = fnamemodify(l:dir, ':t')
@@ -148,59 +193,104 @@ function! GoBuildAndRun()
   execute '!' . l:cmd
 endfunction
 
-" <Leader>g: Show detailed information about the current file and cursor position.
+
+" =============================================================================
+" Build and run key mappings
+" =============================================================================
+
+augroup run_code_with_f5
+  autocmd!
+
+  " Press F5 to build and run C or C++ files.
+  autocmd FileType c,cpp nnoremap <buffer> <F5> :<C-u>call CBuildAndRun()<CR>
+
+  " Press F5 to build and run Go files.
+  autocmd FileType go nnoremap <buffer> <F5> :<C-u>call GoBuildAndRun()<CR>
+
+  " Press F5 to save and run shell scripts with Bash.
+  autocmd FileType sh nnoremap <buffer> <F5> :w<CR>:!bash %<CR>
+
+  " Press F7 to format shell scripts with ALE.
+  autocmd FileType sh nnoremap <buffer> <F7> :ALEFix<CR>
+augroup END
+
+
+" =============================================================================
+" General key mappings
+" =============================================================================
+
+" <Leader>g: Show detailed information about the current file and cursor.
 nnoremap <leader>g 1<C-g>
 
-" Ctrl-N: Toggle both absolute and relative line numbers.
+" Ctrl-N: Toggle absolute and relative line numbers.
 nnoremap <C-n> :set invnumber invrelativenumber<CR>
 
-" <Esc><Esc>: Turn off current highlight search.
+" Esc twice: Clear the current search highlighting.
 nnoremap <Esc><Esc> :nohlsearch<CR>
 
-" Remove all leading whitespace from the selected lines.
+" <Leader>0: Remove leading whitespace from the selected lines.
 xnoremap <leader>0 :s/^\s*//<CR>
 
-" Run the current Go file.
-command! GoRun write | execute '!go run ' . shellescape(expand('%:p'))
-
-" <Leader>t: Open a terminal.
+" <Leader>t: Open a terminal window.
 nnoremap <leader>t :terminal<CR>
 
-" Plugins installed with vim-plug are stored in ~/.vim/plugged.
-if filereadable(expand('~/.vim/autoload/plug.vim'))
-	call plug#begin('~/.vim/plugged')
-		
-		Plug 'junegunn/fzf'
-		Plug 'junegunn/fzf.vim'
-		Plug 'itchyny/lightline.vim'
-		Plug 'jonathanfilip/vim-lucius'
 
-	call plug#end()
+" =============================================================================
+" Go command
+" =============================================================================
+
+" :GoRun: Save and run the current Go file.
+command! GoRun write | execute '!go run ' . shellescape(expand('%:p'))
+
+
+" =============================================================================
+" Plugins
+" =============================================================================
+
+" Load vim-plug and plugins when vim-plug is installed.
+if filereadable(expand('~/.vim/autoload/plug.vim'))
+  call plug#begin('~/.vim/plugged')
+
+  Plug 'junegunn/fzf'
+  Plug 'junegunn/fzf.vim'
+  Plug 'itchyny/lightline.vim'
+  Plug 'jonathanfilip/vim-lucius'
+
+  call plug#end()
 endif
 
 
-" Run ShellCheck while editing shell scripts
+" =============================================================================
+" ALE
+" =============================================================================
+
+" Run ShellCheck on shell scripts.
 let g:ale_linters = {
       \ 'sh': ['shellcheck'],
       \ }
 
-" Use shfmt when running :ALEFix
+" Use shfmt when running :ALEFix.
 let g:ale_fixers = {
       \ 'sh': ['shfmt'],
       \ }
+
+" Indent shell scripts with two spaces when formatting.
 let g:ale_sh_shfmt_options = '-i 2'
 
-" Bash: save and run the current script with F5
-autocmd FileType sh nnoremap <buffer> <F5> :w<CR>:!bash %<CR>
 
-" Bash: format the current buffer with F7
-autocmd FileType sh nnoremap <buffer> <F7> :ALEFix<CR>
+" =============================================================================
+" Colors and status line
+" =============================================================================
 
 colorscheme lucius
 set background=dark
-hi CursorLine cterm=underline
 
-" Status bar
+" Underline the current cursor line.
+highlight CursorLine cterm=underline
+
+" Always show the status line.
 set laststatus=2
+
+" Let lightline display the status line without Vim's built-in mode text.
 set noshowmode
 let g:lightline = { 'colorscheme': 'deus' }
