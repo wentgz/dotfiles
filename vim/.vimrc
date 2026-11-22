@@ -119,7 +119,7 @@ augroup END
 " Build and run
 " =============================================================================
 
-function! CBuildAndRun()
+function! CBuildAndRun(show_warnings)
   " Save the file before building it.
   if empty(expand('%:p'))
     echoerr 'Save the file before running it.'
@@ -146,14 +146,18 @@ function! CBuildAndRun()
   let l:outdir = l:dir . '/out'
   let l:exe = l:outdir . '/' . expand('%:t:r') . '.out'
 
-  " Create the output directory if it does not exist.
   call mkdir(l:outdir, 'p')
 
-  " Build and run the program from the source file's directory.
+  " Show warnings only when called with show_warnings = 1.
+  let l:warning_flags = a:show_warnings
+        \ ? '-Wall -Wextra'
+        \ : '-w'
+
   let l:cmd = 'cd ' . shellescape(l:dir)
         \ . ' && printf "\n========== OUTPUT ==========\n"'
         \ . ' && ' . l:compiler . ' ' . l:standard
-        \ . ' -Wall -Wextra -O2 -o ' . shellescape(l:exe)
+        \ . ' ' . l:warning_flags . ' -O2'
+        \ . ' -o ' . shellescape(l:exe)
         \ . ' ' . shellescape(l:src)
         \ . ' && ' . shellescape(l:exe)
 
@@ -201,19 +205,17 @@ endfunction
 augroup run_code_with_f5
   autocmd!
 
-  " Press F5 to build and run C or C++ files.
-  autocmd FileType c,cpp nnoremap <buffer> <F5> :<C-u>call CBuildAndRun()<CR>
+  " F5 builds and runs C/C++ without warnings.
+  autocmd FileType c,cpp nnoremap <buffer> <F5> :<C-u>call CBuildAndRun(0)<CR>
+
+  " Shift+F5 builds and runs C/C++ with warnings enabled.
+  autocmd FileType c,cpp nnoremap <buffer> <F6> :<C-u>call CBuildAndRun(1)<CR>
 
   " Press F5 to build and run Go files.
   autocmd FileType go nnoremap <buffer> <F5> :<C-u>call GoBuildAndRun()<CR>
 
   " Press F5 to save and run shell scripts with Bash.
   autocmd FileType sh nnoremap <buffer> <F5> :w<CR>:!bash %<CR>
-
-  " Press F7 to format shell scripts with ALE.
-  autocmd FileType sh nnoremap <buffer> <F7> :ALEFix<CR>
-augroup END
-
 
 " =============================================================================
 " General key mappings
