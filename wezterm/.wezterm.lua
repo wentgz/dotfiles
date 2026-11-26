@@ -56,7 +56,8 @@ if light_schemes[selected_scheme] then
   selected.brights[5] = '#197eb4'
 elseif dark_schemes[selected_scheme] then
   selected.ansi[2] = '#f7937a'
-  selected.ansi[5] = '#3f4199'
+  selected.ansi[3] = '#3e962e'
+  selected.ansi[5] = '#b3b3df'
 end
 
 local custom_scheme = selected_scheme .. '-custom'
@@ -98,7 +99,6 @@ config.mouse_bindings = {
 config.launch_menu = {
   { label = 'PowerShell', args = { 'powershell' } },
   { label = 'Command Prompt', args = { 'cmd' } },
-  { label = 'WSL Ubuntu 22.04', args = { 'wsl', '-d', 'ubuntu-22.04' } },
 	{ label = 'Bash', args = { '/bin/bash' } },
 	{ label = 'SSH', args = { 'ssh', 'dummy-remote' } },
 }
